@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Фан-клуб Дениса Соколова</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink: #ff4d8d;
+      --pink-dark: #e63775;
+      --gold: #ffd700;
+      --bg: #0f0c1a;
+      --card: #1a1528;
+      --text: #ffffff;
+      --muted: #b8a9c9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Фоновые сердечки */
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0.15;
+      animation: float-up 12s linear infinite;
+    }
+
+    @keyframes float-up {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.2; }
+      90% { opacity: 0.15; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* Шапка */
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--pink), #ff8fb8);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(255, 77, 141, 0.4);
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      background: linear-gradient(90deg, #ff4d8d, #ffd700, #ff4d8d);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shine 4s linear infinite;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.15rem;
+      font-weight: 400;
+    }
+
+    /* Счётчики */
+    .counters {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
+    .counter-card {
+      background: var(--card);
+      border: 1px solid rgba(255, 77, 141, 0.25);
+      border-radius: 24px;
+      padding: 28px 36px;
+      text-align: center;
+      min-width: 260px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .counter-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 50px rgba(255, 77, 141, 0.2);
+    }
+
+    .counter-card.likes {
+      border-color: rgba(255, 77, 141, 0.5);
+    }
+
+    .counter-card.dislikes {
+      border-color: rgba(120, 120, 140, 0.3);
+      opacity: 0.85;
+    }
+
+    .counter-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .counter-value {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+
+    .likes .counter-value {
+      color: var(--pink);
+      text-shadow: 0 0 30px rgba(255, 77, 141, 0.5);
+    }
+
+    .dislikes .counter-value {
+      color: #888;
+    }
+
+    .counter-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* Галерея */
+    .gallery-title {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 30px;
+      color: var(--gold);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+    }
+
+    .photo-card {
+      background: var(--card);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(255, 77, 141, 0.25);
+    }
+
+    .photo-wrapper {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      background: linear-gradient(145deg, #2a2038, #1a1528);
+      overflow: hidden;
+    }
+
+    .photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .photo-card:hover .photo-wrapper img {
+      transform: scale(1.06);
+    }
+
+    /* Плейсхолдер, пока нет фото */
+    .placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      gap: 12px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #1f1830,
+        #1f1830 10px,
+        #241c36 10px,
+        #241c36 20px
+      );
+    }
+
+    .placeholder span {
+      font-size: 3rem;
+      opacity: 0.4;
+    }
+
+    .caption {
+      padding: 18px 20px;
+      text-align: center;
+    }
+
+    .caption-text {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .caption-sub {
+      font-size: 0.85rem;
+      color: var(--pink);
+      font-weight: 600;
+    }
+
+    /* Футер */
+    footer {
+      text-align: center;
+      margin-top: 70px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    footer strong {
+      color: var(--pink);
+    }
+
+    /* Анимация пульса для счётчика */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    .pulse {
+      animation: pulse 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="container">
+    <header>
+      <div class="badge">Официальный фан-клуб</div>
+      <h1>Денис Соколов</h1>
+      <p class="subtitle">Самый лучший. Самый классный. Просто легенда.</p>
+    </header>
+
+    <div class="counters">
+      <div class="counter-card likes">
+        <div class="counter-label">
+          <span>❤️</span> Кому он нравится
+        </div>
+        <div class="counter-value" id="likes">236 451 723</div>
+        <div class="counter-sub">и число растёт каждую секунду</div>
+      </div>
+
+      <div class="counter-card dislikes">
+        <div class="counter-label">
+          <span>💔</span> Кому он не нравится
+        </div>
+        <div class="counter-value" id="dislikes">0</div>
+        <div class="counter-sub">всегда и навсегда</div>
+      </div>
+    </div>
+
+    <h2 class="gallery-title">Фотогалерея легенды</h2>
+
+    <div class="gallery">
+      <!-- Карточка 1 -->
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="placeholder">
+            <span>📷</span>
+            <div>Фото 1</div>
+          </div>
+          <!-- Когда будет фото: <img src="photo1.jpg" alt="Денис Соколов"> -->
+        </div>
+        <div class="caption">
+          <div class="caption-text">Самый классный</div>
+          <div class="caption-sub">просто факт</div>
+        </div>
+      </div>
+
+      <!-- Карточка 2 -->
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="placeholder">
+            <span>📷</span>
+            <div>Фото 2</div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="caption-text">Самый лучший</div>
+          <div class="caption-sub">без вариантов</div>
+        </div>
+      </div>
+
+      <!-- Карточка 3 -->
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="placeholder">
+            <span>📷</span>
+            <div>Фото 3</div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="caption-text">Король стиля</div>
+          <div class="caption-sub">и харизмы</div>
+        </div>
+      </div>
+
+      <!-- Карточка 4 -->
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="placeholder">
+            <span>📷</span>
+            <div>Фото 4</div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="caption-text">Просто огонь</div>
+          <div class="caption-sub">🔥</div>
+        </div>
+      </div>
+
+      <!-- Карточка 5 -->
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="placeholder">
+            <span>📷</span>
+            <div>Фото 5</div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="caption-text">Икона</div>
+          <div class="caption-sub">нашего времени</div>
+        </div>
+      </div>
+
+      <!-- Карточка 6 -->
+      <div class="photo-card">
+        <div class="photo-wrapper">
+          <div class="placeholder">
+            <span>📷</span>
+            <div>Фото 6</div>
+          </div>
+        </div>
+        <div class="caption">
+          <div class="caption-text">Лучший из лучших</div>
+          <div class="caption-sub">и точка</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Сделано с любовью для <strong>Дениса Соколова</strong><br>
+      Фан-клуб №1 во Вселенной
+    </footer>
+  </div>
+
+  <script>
+    // ===== Счётчик лайков =====
+    let likes = 236451723;
+    const likesEl = document.getElementById('likes');
+
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    }
+
+    function updateLikes() {
+      // Иногда прибавляем больше одного, чтобы выглядело живее
+      const add = Math.random() < 0.3 ? Math.floor(Math.random() * 5) + 1 : 1;
+      likes += add;
+      likesEl.textContent = formatNumber(likes);
+      likesEl.classList.remove('pulse');
+      void likesEl.offsetWidth; // reflow
+      likesEl.classList.add('pulse');
+    }
+
+    setInterval(updateLikes, 1000);
+
+    // ===== Дизлайки всегда 0 =====
+    // (специально ничего не делаем)
+
+    // ===== Летающие сердечки =====
+    const heartsContainer = document.getElementById('hearts');
+    const heartSymbols = ['❤️', '💕', '💗', '💖', '✨', '⭐'];
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.fontSize = (14 + Math.random() * 22) + 'px';
+      heart.style.animationDuration = (9 + Math.random() * 8) + 's';
+      heart.style.animationDelay = Math.random() * 2 + 's';
+      heartsContainer.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 17000);
+    }
+
+    // Создаём сердечки периодически
+    setInterval(createHeart, 700);
+    // Несколько сразу при загрузке
+    for (let i = 0; i < 8; i++) {
+      setTimeout(createHeart, i * 300);
+    }
+  </script>
+</body>
+</html>
